@@ -5,15 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Script</title>
     <style>
-        /* สไตล์พื้นฐาน */
+        /* พื้นฐานหน้าเว็บ */
         body, html {
             margin: 0;
             padding: 0;
+            width: 100%;
             height: 100%;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow: hidden;
             user-select: none;
             -webkit-user-select: none;
+        }
+
+        /* หน้าที่ 1: หน้าปลดล็อก (พื้นหลังสีเทาอ่อน) */
+        #unlock-page {
+            background-color: #000000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* หน้าที่ 2: หน้าสคริปต์ (พื้นหลังสีดำ) */
+        #script-page {
+            background-color: #111;
+            display: none; /* ปิดไว้ก่อน */
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
 
         /* ชื่อเว็บมุมซ้ายบน */
@@ -26,149 +45,103 @@
             color: #ffffff;
             z-index: 100;
         }
+        .script-mode .brand-name { color: #ffffff; } /* เปลี่ยนสีชื่อเว็บเมื่อพื้นหลังดำ */
 
-        /* ส่วนหน้าจอแรก (พื้นหลังสีเทาอ่อน) */
-        #lockScreen {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100%;
-            background-color: #000000;
-            transition: 0.5s;
-        }
-
-        /* ส่วนหน้าจอที่สอง (พื้นหลังสีดำ) */
-        #resultScreen {
-            display: none; /* ซ่อนไว้ก่อน */
-            justify-content: center;
-            align-items: center;
-            height: 100%;
-            background-color: #000000; /* พื้นหลังสีดำ */
-        }
-
+        /* กล่องคอนเทนเนอร์ */
         .container {
             background: white;
-            padding: 2.5rem;
+            padding: 2rem;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
             text-align: center;
             width: 90%;
             max-width: 450px;
         }
 
-        h2 { color: #333; margin-top: 0; }
-        
-        /* สไตล์ปุ่ม */
         .btn {
             display: block;
             width: 100%;
-            padding: 14px;
-            margin: 12px 0;
+            padding: 12px;
+            margin: 10px 0;
             border: none;
             border-radius: 8px;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
             text-decoration: none;
-            transition: 0.3s;
             box-sizing: border-box;
         }
 
         .btn-sub { background-color: #ff0000; color: white; }
-        .btn-sub:hover { background-color: #cc0000; }
+        .btn-unlock { background-color: #28a745; color: white; opacity: 0.5; pointer-events: none; }
+        .btn-unlock.active { opacity: 1; pointer-events: auto; }
 
-        .btn-unlock {
-            background-color: #28a745;
-            color: white;
-            opacity: 0.5;
-            pointer-events: none;
-        }
-
-        .btn-unlock.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        /* ช่องใส่คำสำหรับคัดลอก */
-        .copy-box {
-            width: 100%;
-            padding: 12px;
-            font-size: 18px;
-            text-align: center;
-            border: 2px dashed #ccc;
+        /* ส่วนของกล่องใส่ Script */
+        .script-box {
+            background: #f8f9fa;
+            border: 2px solid #ddd;
+            padding: 15px;
             border-radius: 8px;
+            word-break: break-all;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
             margin-bottom: 15px;
-            background: #f9f9f9;
             color: #333;
-            outline: none;
+            text-align: left;
         }
 
-        .btn-copy {
-            background-color: #007bff;
-            color: white;
-        }
-
+        .btn-copy { background-color: #007bff; color: white; }
         .btn-copy:hover { background-color: #0056b3; }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
-    <h1 class="brand-name" id="mainTitle">TigerCool</h1>
+    <h1 class="brand-name" id="main-title">TigerCool</h1>
 
-    <div id="lockScreen">
+    <div id="unlock-page">
         <div class="container">
-            <h2>🔒 ล็อกเนื้อหา</h2>
-            <p>ติดตามเราเพื่อรับลิงก์</p>
-
-            <a href="https://www.youtube.com/@TigerCool67" 
-               target="_blank" 
-               class="btn btn-sub" 
-               onclick="startProcess()">
-               1. กดติดตาม (Subscribe)
-            </a>
-
-            <button id="unlockBtn" class="btn btn-unlock" onclick="showResult()">
-               2. ปลดล็อกและดูเนื้อหา
-            </button>
+            <h2>🔒 ลิงก์ถูกล็อกอยู่</h2>
+            <p>กดติดตามเพื่อรับ Script</p>
+            <a href="https://www.youtube.com/@TigerCool67" target="_blank" class="btn btn-sub" onclick="startVerification()">1. กดติดตาม (Subscribe)</a>
+            <button id="unlockBtn" class="btn btn-unlock" onclick="showScriptPage()">2. รับสคริปต์</button>
         </div>
     </div>
 
-    <div id="resultScreen">
+    <div id="script-page">
         <div class="container">
-            <h2 style="color: #333;">🎉 ปลดล็อกสำเร็จ!</h2>
-            <p>นี่คือสคริปต์:</p>
-            
-            <input type="text" value="loadstring(game:HttpGet("https://rawscripts.net/raw/UPD!-BloxStrike-SkinChanger-126555"))()" id="textToCopy" class="copy-box" readonly>
-            
-            <button class="btn btn-copy" onclick="copyToClipboard()">คัดลอกข้อความ</button>
+            <h3>📋 คัดลอกสคริปต์ของคุณ</h3>
+            <div class="script-box" id="scriptText">loadstring(game:HttpGet("https://rawscripts.net/raw/UPD!-BloxStrike-SkinChanger-126555"))()</div>
+            <button class="btn btn-copy" onclick="copyScript()">คัดลอกข้อความ (Copy)</button>
+            <p id="copyStatus" style="font-size: 12px; color: #28a745; display: none;">คัดลอกลง Clipboard แล้ว!</p>
         </div>
     </div>
 
     <script>
-        // 1. ฟังก์ชันเมื่อกดปุ่มติดตาม
-        function startProcess() {
+        // 1. ฟังก์ชันปลดล็อกปุ่มที่ 2
+        function startVerification() {
             setTimeout(function() {
-                const unlockBtn = document.getElementById('unlockBtn');
-                unlockBtn.classList.add('active');
-                unlockBtn.innerText = "2. ปลดล็อกและดูเนื้อหา (พร้อมแล้ว)";
+                const btn = document.getElementById('unlockBtn');
+                btn.classList.add('active');
+                btn.innerText = "2. ปลดล็อกสำเร็จ! คลิกเพื่อรับสคริปต์";
             }, 2000);
         }
 
-        // 2. ฟังก์ชันเมื่อกดปลดล็อก (เปลี่ยนหน้า)
-        function showResult() {
-            document.getElementById('lockScreen').style.display = 'none';
-            document.getElementById('resultScreen').style.display = 'flex';
-            document.getElementById('mainTitle').style.color = '#fff'; // เปลี่ยนสีชื่อเว็บให้เห็นชัดบนพื้นหลังดำ
+        // 2. ฟังก์ชันสลับไปหน้าสีดำ (หน้าสคริปต์)
+        function showScriptPage() {
+            document.getElementById('unlock-page').style.display = 'none';
+            document.getElementById('script-page').style.display = 'flex';
+            document.body.classList.add('script-mode');
+            document.getElementById('main-title').style.color = '#fff';
         }
 
-        // 3. ฟังก์ชันคัดลอกข้อความ
-        function copyToClipboard() {
-            const copyText = document.getElementById("textToCopy");
-            copyText.select();
-            copyText.setSelectionRange(0, 99999); // สำหรับมือถือ
-            navigator.clipboard.writeText(copyText.value);
-            
-            alert("คัดลอกข้อความเรียบร้อยแล้ว: " + copyText.value);
+        // 3. ฟังก์ชันคัดลอกสคริปต์
+        function copyScript() {
+            const text = document.getElementById('scriptText').innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const status = document.getElementById('copyStatus');
+                status.style.display = 'block';
+                setTimeout(() => { status.style.display = 'none'; }, 2000);
+            });
         }
 
         // 4. ป้องกันการแกะโค้ด
